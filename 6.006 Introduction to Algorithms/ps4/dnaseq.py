@@ -41,6 +41,7 @@ def subsequenceHashes(seq, k):
             subseq += seq.next()
             idx += 1
         rh = RollingHash(subseq)
+        # put idx = 0 here is better, do not need to minus k
         while True:
             yield (subseq, rh.current_hash(), idx-k)
             next_item = seq.next()
