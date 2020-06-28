@@ -1,0 +1,70 @@
+%
+% 6.006 problem set 6
+%
+\documentclass[12pt,twoside]{article}
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\textwidth}{6.5in}
+\setlength{\topmargin}{0in}
+\setlength{\textheight}{8.5in}
+\begin{document}
+Problem 6-1.\\
+\\
+\hspace*{2em}def ComputeStrength(V, E, k, s):\\
+\hspace*{4em}d = [0 for i in range(|V|)]\\
+\hspace*{4em}d[s] = 1\\
+\hspace*{4em}for i in range(k):\\
+\hspace*{6em}for e in E:\\
+\hspace*{8em}d[e.end] = max(d[e.start]*e.weight, d[e.end])\\
+\hspace*{4em}return d\\
+Correct:\\
+\hspace*{2em}def ComputeStrength(V, E, k, s):\\
+\hspace*{4em}d = [$\infty$ for i in range(|V|)]\\
+\hspace*{4em}d[s] = 0\\
+\hspace*{4em}for i in range(k):\\
+\hspace*{6em}T = \{\}\\
+\hspace*{6em}for e in E:\\
+\hspace*{8em}if(d[e.start] + e.weight < d[e.end]):\\
+\hspace*{10em}T[e.end] = d[e.start] + e.weight\\
+\hspace*{6em}for v in T:\\
+\hspace*{8em}d[v] = T[v]\\
+\hspace*{4em}return d\\
+Reason:\\
+For some sequence of edges, the length of path may exceed k. Updating one level 
+each loop guarantees the length.
+\\
+
+Problem 6-2.\\
+\\
+  a: We abstract this problem into a graph. A library is a vertex and
+  and Edge(u to v, directional) means library U is library V's 
+  dependency. Then we do topological sort to this graph (deep first 
+  traverse, add a vertex to the result list then this vertex finishes,
+  then reverse the list).\\
+  Correct: Edge(u to v, directional) means library V is library U's 
+  dependency and do not reverse the result list.\\
+  \\
+  b: \\
+  \hspace*{2em}def ComputeOrder(P, D, E):\\
+  \hspace*{4em}res = []\\
+  \hspace*{4em}for v in D:\\
+  \hspace*{6em}DFS\_visit(P, v, E, res)\\
+  \hspace*{4em}res.reverse() \#wrong and remove this\\
+  \hspace*{4em}return res\\
+  \\
+  \hspace*{2em}def DFS\_visit(P, v, E, res):\\
+  \hspace*{4em}v.visit = True\\
+  \hspace*{4em}for e in E[v]:\\
+  \hspace*{6em}if e.end.visit is None or !e.end.visit:\\
+  \hspace*{8em}DFS\_visit(e.end, E, res)\\
+  \hspace*{4em}if v not in P:\\
+  \hspace*{6em}res.append(v)\\
+  \\
+  Correct:\\
+  If v is installed, the dependencies are installed too. So we don't have to visit
+  the vertex followed. Change "if e.end.visit is None or !e.end.visit:" into
+  "if (e.end.visit is None or !e.end.visit) and v not in P:"
+
+  
+
+\end{document}
